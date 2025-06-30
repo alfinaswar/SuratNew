@@ -1,0 +1,1 @@
+[06-Mar-2025 09:34:49 Asia/Jakarta] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 20480 bytes) in /home/u1575221/public_html/kalibrasidkhfix/vendor/dompdf/dompdf/src/Frame/Factory.php on line 198
