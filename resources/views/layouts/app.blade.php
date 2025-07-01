@@ -77,8 +77,8 @@
     <div id="main-wrapper">
         <div class="nav-header">
             <a href="{{ route('home') }}" class="brand-logo">
-                <img src="{{ asset('assets/images/logo/circle-logo.png') }}" class="logo-abbr">
-                <img src="{{ asset('assets/images/logo/main-logo.png') }}" class="brand-title" height="40%">
+                <img src="{{ asset('assets/images/logo/e-surat-bulat.png') }}" class="logo-abbr">
+                <img src="{{ asset('assets/images/logo/e-surat.png') }}" class="brand-title" height="40%">
 
 
             </a>
