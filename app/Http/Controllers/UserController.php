@@ -176,6 +176,13 @@ class UserController extends Controller
 
         return response()->json($units);
     }
+    public function getCCExternal(Request $request)
+    {
+        $iduser = $request->id;
+        $units = MasterPenerimaEksternal::whereNot('id', $iduser)->get(['id', 'Nama']);
+
+        return response()->json($units);
+    }
     public function getBCCInternal(Request $request)
     {
         $iduser = $request->id;
@@ -183,6 +190,16 @@ class UserController extends Controller
         $units = User::whereNot('id', $iduser2)
             ->whereNotIn('id', [$iduser])
             ->get(['id', 'name']);
+
+        return response()->json($units);
+    }
+    public function getCCExternal2(Request $request)
+    {
+        $iduser = $request->id;
+        $iduser2 = $request->id2;
+        $units = MasterPenerimaEksternal::whereNot('id', $iduser2)
+            ->whereNotIn('id', [$iduser])
+            ->get(['id', 'Nama']);
 
         return response()->json($units);
     }

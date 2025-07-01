@@ -78,6 +78,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::GET('/get-users-eks/{id}', [UserController::class, 'getUsersEks'])->name('users.get-users-eks');
         Route::GET('/get-cc-internal', [UserController::class, 'getCCInternal'])->name('users.getCCInternal');
         Route::GET('/get-bcc-internal', [UserController::class, 'getBCCInternal'])->name('users.getBCCInternal');
+        Route::GET('/get-cc-external', [UserController::class, 'getCCExternal'])->name('users.getCCExternal');
+        Route::GET('/get-bcc-external', [UserController::class, 'getCCExternal2'])->name('users.getCCExternal2');
 
     });
     Route::prefix('drafter')->group(function () {

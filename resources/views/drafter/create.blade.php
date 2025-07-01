@@ -184,12 +184,12 @@
                                                     <div class="form-group">
                                                         <label class="form-label" for="PenerimaSuratEksternal">Penerima
                                                             Surat</label>
-                                                        <select class="form-select select-filter"
-                                                            name="PenerimaSuratEksternal" id="choices-multiple-default"
-                                                            placeholder="Pilih Penerima">
+                                                        <select class="multi-select PenerimaSuratEksternal"
+                                                            name="PenerimaSuratEksternal" placeholder="Pilih Penerima"
+                                                            data-url="{{ route('users.getCCExternal') }}">
                                                             <option value="">Pilih Penerima</option>
                                                             @foreach ($eksternal as $pa)
-                                                                <option value="{{ $pa->id }}">{{ $pa->Nama }} -
+                                                                <option value=" {{ $pa->id }}">{{ $pa->Nama }} -
                                                                     {{ $pa->Jabatan }}
                                                                 </option>
                                                             @endforeach
@@ -279,9 +279,9 @@
                                         <div class="accordion-body">
                                             <div class="form-group mb-3">
                                                 <label for="cc">Carbon Copy Eksternal</label>
-                                                <select class="form-control select-filter" data-trigger
-                                                    name="CarbonCopyExt[]" id="choices-multiple-cc"
-                                                    placeholder="Pilih penerima CC" multiple>
+                                                <select class="multi-select CarbonCopyExt" data-trigger
+                                                    name="CarbonCopyExt[]" placeholder="Pilih penerima CC" multiple
+                                                    data-url="{{ route('users.getCCExternal2') }}">
                                                     @foreach ($eksternal as $pa2)
                                                         <option value="{{ $pa2->id }}">{{ $pa2->Nama }} -
                                                             {{ $pa2->Jabatan }}
@@ -337,9 +337,9 @@
                                             <div class="accordion-body">
                                                 <div class="form-group mb-3">
                                                     <label for="bcc">Blind CC Eksternal</label>
-                                                    <select class="form-control select-filter" data-trigger
-                                                        name="BlindCarbonCopyExt[]" id="choices-multiple-bcc"
-                                                        placeholder="Pilih penerima BC" multiple>
+                                                    <select class="multi-select BlindCarbonCopyExt" data-trigger
+                                                        name="BlindCarbonCopyExt[]" placeholder="Pilih penerima BC"
+                                                        multiple>
 
                                                         @foreach ($eksternal as $pa2)
                                                             <option value="{{ $pa2->id }}">{{ $pa2->Nama }} -
@@ -388,13 +388,13 @@
 @push('js')
     <script>
         $(document).ready(function () {
-            // $("#PenerimaInternal").hide();
-            // $("#PenerimaEksternal").hide();
-            // $("#CCInternal").hide();
-            // $("#CCExternal").hide();
-            // $("#BCCInternal").hide();
-            // $("#BCCExternal").hide();
-            // $("#IsiSurat").show();
+            $("#PenerimaInternal").hide();
+            $("#PenerimaEksternal").hide();
+            $("#CCInternal").hide();
+            $("#CCExternal").hide();
+            $("#BCCInternal").hide();
+            $("#BCCExternal").hide();
+            $("#IsiSurat").show();
 
             $('.PenerimaSurat').on('change', function () {
                 let Penerima1 = $(this).val();
@@ -461,7 +461,71 @@
                     $('.PenerimaInternal3').empty().append('<option value="">Pilih Nama</option>');
                 }
             });
+            $('.PenerimaSuratEksternal').on('change', function () {
+                let Penerima1 = $(this).val();
+                let url = $(this).data('url');
 
+                $('.CarbonCopyExt').empty().append('<option value="">Loading...</option>');
+
+                if (Penerima1) {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        data: {
+                            id: Penerima1
+                        },
+                        success: function (response) {
+                            $('.CarbonCopyExt').empty().append(
+                                '<option value="">Pilih Nama</option>');
+                            $.each(response, function (key, unit) {
+                                $('.CarbonCopyExt').append(
+                                    `<option value="${unit.id}">${unit.name}</option>`
+                                );
+                            });
+                        },
+                        error: function () {
+                            $('.CarbonCopyExt').empty().append(
+                                '<option value="">Gagal mengambil data</option>');
+                        }
+                    });
+                } else {
+                    $('.CarbonCopyExt').empty().append('<option value="">Pilih Nama</option>');
+                }
+            });
+            $('.CarbonCopyExt').on('change', function () {
+                let Penerima1 = $(this).val();
+                let Penerima2 = $('.PenerimaSuratEksternal').val();
+                // alert(Penerima1)
+                let url = $(this).data('url');
+
+                $('.BlindCarbonCopyExt').empty().append('<option value="">Loading...</option>');
+
+                if (Penerima1) {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        data: {
+                            id: Penerima1,
+                            id2: Penerima2
+                        },
+                        success: function (response) {
+                            $('.BlindCarbonCopyExt').empty().append(
+                                '<option value="">Pilih Nama</option>');
+                            $.each(response, function (key, unit) {
+                                $('.BlindCarbonCopyExt').append(
+                                    `<option value="${unit.id}">${unit.name}</option>`
+                                );
+                            });
+                        },
+                        error: function () {
+                            $('.BlindCarbonCopyExt').empty().append(
+                                '<option value="">Gagal mengambil data</option>');
+                        }
+                    });
+                } else {
+                    $('.BlindCarbonCopyExt').empty().append('<option value="">Pilih Nama</option>');
+                }
+            });
             changeKategori();
         });
 
@@ -524,9 +588,9 @@
                     if (file.type.startsWith('image/')) {
                         previewElement.innerHTML =
                             `
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="mt-1">${file.name}</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="mt-1">${file.name}</div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `;
                     } else {
                         let fileIcon = '📄';
                         if (file.type.includes('pdf')) fileIcon = '📕';
@@ -535,11 +599,11 @@
 
                         previewElement.innerHTML =
                             `
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="text-center">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div style="font-size: 2rem;">${fileIcon}</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="text-center">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div style="font-size: 2rem;">${fileIcon}</div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `;
                     }
                 };
 
