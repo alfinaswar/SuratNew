@@ -21,7 +21,8 @@ class SuratTerkirimController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btnShow = '<a href="' . route('surat-terkirim.download', $row->id) . '" class="btn btn-info btn-md btn-show" title="Show"><i class="fas fa-download"></i></a>';
-                    return $btnShow;
+                    $view = ' <a href="' . route('drafter.show', $row->id) . '" class="btn btn-light btn-md btn-download" title="Download"><i class="fas fa-eye"></i></a>';
+                    return $btnShow . $view;
                 })
                 ->addColumn('StatusLabel', function ($row) {
                     switch ($row->Status) {
@@ -78,9 +79,13 @@ class SuratTerkirimController extends Controller
      */
     public function show($id)
     {
-        $surat = Surat::with(['getPenerima', 'getPenulis', 'getCatatan' => function ($query) use ($id) {
-            $query->where('DibuatOleh', auth()->user()->id)->where('idSurat', $id);
-        }])->findOrFail($id);
+        $surat = Surat::with([
+            'getPenerima',
+            'getPenulis',
+            'getCatatan' => function ($query) use ($id) {
+                $query->where('DibuatOleh', auth()->user()->id)->where('idSurat', $id);
+            }
+        ])->findOrFail($id);
         // dd($surat);
         return view('surat-terkirim.show', compact('surat'));
     }
